@@ -1,7 +1,7 @@
 # Tai Sakuma <sakuma@fnal.gov>
 
-library('plyr')
-library('reshape')
+library('plyr', warn.conflicts = FALSE, quietly = TRUE)
+library('reshape', warn.conflicts = FALSE, quietly = TRUE)
 
 ##____________________________________________________________________________||
 call.write.table <- function(x, file)

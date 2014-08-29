@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
 # Tai Sakuma <sakuma@fnal.gov>
 
-library('plyr')
-library('reshape')
+library('plyr', warn.conflicts = FALSE, quietly = TRUE)
+library('reshape', warn.conflicts = FALSE, quietly = TRUE)
 
 ##____________________________________________________________________________||
 main <- function(inputFiles)
