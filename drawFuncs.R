@@ -1,10 +1,12 @@
 # Tai Sakuma <sakuma@fnal.gov>
 
-library('lattice')
-library('latticeExtra')
-library('grid')
-library('RColorBrewer')
-library('vcd')
+library('lattice', warn.conflicts = FALSE, quietly = TRUE)
+library('latticeExtra', warn.conflicts = FALSE, quietly = TRUE)
+library('grid', warn.conflicts = FALSE, quietly = TRUE)
+library('RColorBrewer', warn.conflicts = FALSE, quietly = TRUE)
+library('methods', warn.conflicts = FALSE, quietly = TRUE)
+library('vcd', warn.conflicts = FALSE, quietly = TRUE)
+library('colorspace', warn.conflicts = FALSE, quietly = TRUE)
 
 source('quartz_save.R')
 source('drawThemes.R')
@@ -31,9 +33,28 @@ call.quartz.save <- function(file)
     }
 
 ##____________________________________________________________________________||
-mk.fig.id <- function(fig.id)
+mk.fig.id <- function(base = NULL, sub = NULL)
   {
-    if( ! is.null(arg.id) ) fig.id <- paste(fig.id, '_', arg.id, sep = '')
+    mk.fig.id.base <- function()
+      {
+        argv <- commandArgs(trailingOnly = FALSE)
+        bn <- basename(substring(argv[grep("--file=", argv)], 8))
+        fxxx <- sub('.R', '', bn)
+        fxxx <- strsplit(fxxx, '_')[[1]][2]
+
+        wd <- getwd()
+        wd.bn <- basename(wd)
+        sxxxx <- strsplit(wd.bn, '_')[[1]][1]
+
+        wd.parent.bn <- basename(dirname(wd))
+        cxxxxxx <- strsplit(wd.parent.bn, '_')[[1]][1]
+
+        paste(cxxxxxx, sxxxx, fxxx, sep = '_')
+      }
+    
+    base <- if(is.null(base)) mk.fig.id.base() else base
+    fig.id <- if(is.null(sub)) base else paste(base, sub, sep = '_')
+    fig.id <- if(is.null(arg.id)) fig.id else paste(fig.id, arg.id, sep = '_')
     fig.id
   }
 

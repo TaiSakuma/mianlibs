@@ -1,12 +1,35 @@
 # Copyright (C) 2011 Tai Sakuma <sakuma@fnal.gov>
 
-library('Hmisc')
+library('Hmisc', warn.conflicts = FALSE, quietly = TRUE)
 
 ##____________________________________________________________________________||
 readArgs <- parse('latexReadArgs.R')
 
 ##____________________________________________________________________________||
-mk.tex.id <- function(tex.id) if(is.null(arg.id) ) tex.id else paste(tex.id, '_', arg.id, sep = '')
+mk.tex.id <- function(base = NULL, sub = NULL)
+  {
+    mk.tex.id.base <- function()
+      {
+        argv <- commandArgs(trailingOnly = FALSE)
+        bn <- basename(substring(argv[grep("--file=", argv)], 8))
+        fxxx <- sub('.R', '', bn)
+        fxxx <- strsplit(fxxx, '_')[[1]][2]
+
+        wd <- getwd()
+        wd.bn <- basename(wd)
+        sxxxx <- strsplit(wd.bn, '_')[[1]][1]
+
+        wd.parent.bn <- basename(dirname(wd))
+        cxxxxxx <- strsplit(wd.parent.bn, '_')[[1]][1]
+
+        paste(cxxxxxx, sxxxx, fxxx, sep = '_')
+      }
+    
+    base <- if(is.null(base)) mk.tex.id.base() else base
+    tex.id <- if(is.null(sub)) base else paste(base, sub, sep = '_')
+    tex.id <- if(is.null(arg.id)) tex.id else paste(tex.id, arg.id, sep = '_')
+    tex.id
+  }
 
 ##____________________________________________________________________________||
 tex.file.name <- function(tex.id) paste(arg.outdir, '/', tex.id, '.tex', sep = '')

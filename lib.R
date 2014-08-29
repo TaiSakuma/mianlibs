@@ -6,14 +6,14 @@ library('reshape', warn.conflicts = FALSE, quietly = TRUE)
 ##____________________________________________________________________________||
 call.write.table <- function(x, file)
   {
-    cat('writing', file, '\n')
+    cat('writing', file, '\n', file = stderr())
     write.table(format(x, digits = 4), file, quote = FALSE, row.names = FALSE)
   }
 
 ##____________________________________________________________________________||
 call.write.table.aliened <- function(x, file, digits = 4)
   {
-    cat('writing', file, '\n')
+    cat('writing', file, '\n', file = stderr())
     for(col in names(x)) if(is.factor(x[[col]])) x[col] <- as.character(x[[col]])
     for(col in names(x)) if(is.integer(x[[col]])) x[col] <- as.character(x[[col]])
     for(col in names(x)) if(is.double(x[[col]])) x[col] <- sprintf(paste("%.", digits, "f", sep = ""), x[[col]])

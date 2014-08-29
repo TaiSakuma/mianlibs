@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (C) 2013 Tai Sakuma <sakuma@fnal.gov>
+# Copyright (C) 2011 Tai Sakuma <sakuma@fnal.gov>
 
 ##____________________________________________________________________________||
 jobDir=${1:-./tmp_condor}
@@ -13,7 +13,8 @@ submittedDir=$(pwd)
 ##____________________________________________________________________________||
 let iProcess=0
 while read -r line; do
-    echo $line > ${jobDir}/command_${iProcess}.sh
+    mkdir -p ${jobDir}/job.${iProcess}
+    echo $line > ${jobDir}/job.${iProcess}/command.sh
     let iProcess=iProcess+1
 done
 
@@ -22,11 +23,11 @@ cat > ${jobDir}/condor_desc.cfg <<EOF
 Universe   = vanilla
 Executable = job.sh
 Requirements = Memory >= 199 && OpSys == "LINUX" && (Arch != "DUMMY") && Disk > 1000000
-Arguments  = ${jobDir}/command_\$(Process).sh
-Log        = condor_job_\$(Process).log
-Output     = condor_job_\$(Process).out
-Error      = condor_job_\$(Process).error
-# initialdir = job.\$(Process)
+Arguments  = ${jobDir}/job.\$(Process)
+Log        = condor_job.log
+Output     = condor_job.out
+Error      = condor_job.error
+initialdir = job.\$(Process)
 should_transfer_files   = YES 
 when_to_transfer_output = ON_EXIT
 notification =  Never
@@ -40,8 +41,7 @@ cat > ${jobDir}/job.sh <<EOF
 source /uscmst1/prod/sw/cms/shrc prod
 cd ${submittedDir}
 eval \`scramv1 runtime -sh\`
-echo \${_CONDOR_SCRATCH_DIR}
-source \$1
+source \$1/command.sh
 EOF
 
 ##____________________________________________________________________________||
