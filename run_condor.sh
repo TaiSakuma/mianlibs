@@ -21,7 +21,9 @@ done
 cat > ${jobDir}/condor_desc.cfg <<EOF
 Universe   = vanilla
 Executable = job.sh
-Requirements = Memory >= 199 && OpSys == "LINUX" && (Arch != "DUMMY") && Disk > 1000000
+Requirements = OpSys == "LINUX" && (Arch != "DUMMY")
+Request_memory = 199
+Request_disk = 1000000
 Arguments  = ${jobDir}/command_\$(Process).sh
 Log        = condor_job_\$(Process).log
 Output     = condor_job_\$(Process).out
